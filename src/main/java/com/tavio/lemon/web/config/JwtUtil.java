@@ -14,15 +14,13 @@ import java.util.Date;
 
 @Component
 public class JwtUtil {
-    @Value("${JWT_SECRET}")
-    private String jwt_secret;
-
-    private final Key secretKey = Keys.hmacShaKeyFor(
-            jwt_secret.getBytes()
-    );
 
     private final long jwtExpirationMs = 24 * 60 * 60 * 1000;
+    private final Key secretKey;
 
+    public JwtUtil(@Value("${JWT_SECRET}") String jwtSecret) {
+        this.secretKey = Keys.hmacShaKeyFor(jwtSecret.getBytes());
+    }
 
     public String generateToken(UserDetailsImpl userDetails) {
         Date now = new Date();
