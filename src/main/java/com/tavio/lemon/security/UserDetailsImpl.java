@@ -16,8 +16,6 @@ public class UserDetailsImpl implements UserDetails {
     private final String username;
     private final String password;
     private final Collection<? extends GrantedAuthority> authorities;
-
-    // Constructor privado; el build() es el punto de entrada
     private UserDetailsImpl(Long id, String username, String password,
                             Collection<? extends GrantedAuthority> authorities) {
         this.id = id;
@@ -26,7 +24,6 @@ public class UserDetailsImpl implements UserDetails {
         this.authorities = authorities;
     }
 
-    // Crea la instancia a partir de tu entidad UserEntity
     public static UserDetailsImpl build(UserEntity user) {
         List<GrantedAuthority> auths = List.of(
                 new SimpleGrantedAuthority("ROLE_" + user.getRole())
@@ -54,7 +51,6 @@ public class UserDetailsImpl implements UserDetails {
         return username;
     }
 
-    // Para simplificar: siempre activo y sin expiración
     @Override public boolean isAccountNonExpired()     { return true; }
     @Override public boolean isAccountNonLocked()      { return true; }
     @Override public boolean isCredentialsNonExpired() { return true; }

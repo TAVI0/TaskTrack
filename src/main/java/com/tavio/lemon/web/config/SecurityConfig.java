@@ -53,22 +53,14 @@ public class SecurityConfig {
         return http.build();
     }
 
-    /**
-     * Bean para encriptar/validar contraseñas con BCrypt.
-     */
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
-    /**
-     * Exponer el AuthenticationManager que usa Spring Security internamente,
-     * para poder inyectarlo en tu AuthService.
-     */
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration cfg) throws Exception {
         return cfg.getAuthenticationManager();
     }
 
-    // Aquí iría también la configuración de HttpSecurity, JWT filter, etc.
 }

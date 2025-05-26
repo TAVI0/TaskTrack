@@ -6,6 +6,7 @@ import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.security.Key;
@@ -13,18 +14,16 @@ import java.util.Date;
 
 @Component
 public class JwtUtil {
+    @Value("${JWT_SECRET}")
+    private String jwt_secret;
 
-    // Clave secreta; en producción cargala de config externa (env var)
     private final Key secretKey = Keys.hmacShaKeyFor(
-            "MiSuperSecretoParaJWTDeAlMenos32Caracteres!".getBytes()
+            jwt_secret.getBytes()
     );
 
-    // Tiempo de validez en ms (ej. 24h)
     private final long jwtExpirationMs = 24 * 60 * 60 * 1000;
 
-    /**
-     * Genera el token JWT usando username como subject.
-     */
+
     public String generateToken(UserDetailsImpl userDetails) {
         Date now = new Date();
         Date exp = new Date(now.getTime() + jwtExpirationMs);
@@ -37,22 +36,15 @@ public class JwtUtil {
                 .compact();
     }
 
-    /**
-     * Extrae el username del token.
-     */
     public String getUsernameFromToken(String token) {
         return parseClaims(token).getSubject();
     }
 
-    /**
-     * Valida firma y expiración.
-     */
     public boolean validateToken(String token) {
         try {
             parseClaims(token);
             return true;
         } catch (JwtException | IllegalArgumentException e) {
-            // loguear error si querés
             return false;
         }
     }

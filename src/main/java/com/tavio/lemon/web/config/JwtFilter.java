@@ -62,7 +62,6 @@ public class JwtFilter extends OncePerRequestFilter {
             }
         }
 
-        // Continua la cadena de filtros
         chain.doFilter(request, response);
     }
 }

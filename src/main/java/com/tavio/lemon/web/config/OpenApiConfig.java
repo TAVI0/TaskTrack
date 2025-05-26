@@ -24,9 +24,9 @@ public class OpenApiConfig {
                 .info(new Info()
                         .title("Lemon Challenge API")
                         .version("v0.0.1")
-                        .description("API para gestionar usuarios y tareas del challenge de Marcos Tavio"))
+                        .description("API para gestionar usuarios y tareas de Marcos Tavio"))
                 .externalDocs(new ExternalDocumentation()
                         .description("Repo GitHub")
-                        .url("https://github.com/tu-repo/lemon"));
+                        .url("https://github.com/TAVI0/TaskTrack"));
     }
 }
