@@ -1,23 +1,12 @@
-# Usa un JDK 17 oficial
+# Etapa 1: Construcción del jar usando Maven
 FROM eclipse-temurin:17-jdk-jammy
-
-# Directorio de trabajo
 WORKDIR /app
+COPY . .
+RUN mvn clean package -DskipTests
 
-# Copia Maven Wrapper y dependencias
-COPY mvnw .
-COPY .mvn .mvn
-COPY pom.xml .
-
-# Descarga dependencias sin ejecutar tests
-RUN chmod +x mvnw && ./mvnw dependency:go-offline -B
-
-# Copia el código fuente y compílalo
-COPY src src
-RUN ./mvnw clean package -DskipTests
-
-# Expón el puerto que usa Spring Boot
+# Etapa 2: Ejecutar el jar en una imagen más liviana
+FROM eclipse-temurin:17-jdk-jammy
+WORKDIR /app
+COPY --from=build /app/target/*.jar app.jar
 EXPOSE 8080
-
-# Arranca la aplicación
-ENTRYPOINT ["java","-jar","target/tasktrack-backend-0.0.1-SNAPSHOT.jar"]
+ENTRYPOINT ["java", "-jar", "app.jar"]
