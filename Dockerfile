@@ -1,28 +1,22 @@
-# Etapa 1: Build con Maven
-FROM maven:3.9.0-openjdk-17-slim AS build
+# Etapa 1: build con Maven + JDK 21
+FROM maven:3.9.4-jdk-21-slim AS build
 WORKDIR /app
 
-# Solo copiamos pom.xml primero para cachear dependencias
+# 1) Cacheamos dependencias copiando solo el pom
 COPY pom.xml .
-# Si usas Maven Wrapper en lugar del cli, reemplaza la línea anterior por:
-# COPY mvnw pom.xml .
-# COPY .mvn .mvn
-
 RUN mvn dependency:go-offline -B
 
-# Ahora copiamos el resto del código y construimos el jar
+# 2) Copiamos el código y empaquetamos sin tests
 COPY src ./src
 RUN mvn clean package -DskipTests -B
 
-# Etapa 2: Runtime con JRE liviano
-FROM eclipse-temurin:17-jre-jammy
+# Etapa 2: runtime con JDK 21 liviano
+FROM eclipse-temurin:21-jdk-jammy
 WORKDIR /app
 
-# Copiamos el fat-jar generado
+# 3) Traemos el jar compilado
 COPY --from=build /app/target/*.jar app.jar
 
-# Puerto expuesto por tu aplicación Spring Boot
+# 4) Exponemos el puerto de Spring Boot y arrancamos
 EXPOSE 8080
-
-# Comando de arranque
 ENTRYPOINT ["java", "-jar", "app.jar"]
