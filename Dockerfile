@@ -18,6 +18,7 @@ WORKDIR /app
 
 # 3️⃣ Copiamos el fat-jar generado
 COPY --from=build /app/target/*.jar app.jar
+ENV PORT=8080
 
 # 4️⃣ Exponemos y arrancamos
 EXPOSE 8080
