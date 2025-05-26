@@ -1,12 +1,15 @@
-# Etapa 1: build con Maven + JDK 21
-FROM maven:3.9.4-jdk-21-slim AS build
+# Etapa 1: build con Maven y Java 21
+FROM eclipse-temurin:21-jdk-jammy as build
 WORKDIR /app
 
-# 1) Cacheamos dependencias copiando solo el pom
+# Instalamos Maven manualmente
+RUN apt-get update && \
+    apt-get install -y maven && \
+    apt-get clean
+
 COPY pom.xml .
 RUN mvn dependency:go-offline -B
 
-# 2) Copiamos el código y empaquetamos sin tests
 COPY src ./src
 RUN mvn clean package -DskipTests -B
 
@@ -14,9 +17,7 @@ RUN mvn clean package -DskipTests -B
 FROM eclipse-temurin:21-jdk-jammy
 WORKDIR /app
 
-# 3) Traemos el jar compilado
 COPY --from=build /app/target/*.jar app.jar
 
-# 4) Exponemos el puerto de Spring Boot y arrancamos
 EXPOSE 8080
 ENTRYPOINT ["java", "-jar", "app.jar"]
