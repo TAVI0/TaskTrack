@@ -61,17 +61,12 @@ Este backend provee:
    git clone https://github.com/TAVI0/TaskTrack.git
    cd tasktrack
    ```
-2. Crear archivo `.env` (opcional) si quieres sobreescribir variables:
-
-   ```bash
-   JWT_SECRET=MiSuperSecretoParaJWTDeAlMenos32Caracteres!
-   ```
-3. Levantar servicios:
+2. Levantar servicios:
 
    ```bash
    docker-compose up --build
    ```
-4. La API quedará disponible en `http://localhost:8080`.
+3. La API quedará disponible en `http://localhost:8080`.
 
 ---
 
