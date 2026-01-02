@@ -15,21 +15,23 @@ public class CorsConfig {
 
     @Value("${ALLOWED_ORIGIN}")
     private String allowedOrigin;
+
     @PostConstruct
     public void logOrigin() {
         System.out.println("→ ALLOWED_ORIGIN = " + allowedOrigin);
     }
+
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration cors = new CorsConfiguration();
-        cors.setAllowedOrigins(List.of(allowedOrigin));
 
+        cors.setAllowedOriginPatterns(List.of(allowedOrigin));
         cors.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         cors.setAllowedHeaders(List.of("*"));
         cors.setAllowCredentials(true);
 
-        UrlBasedCorsConfigurationSource src = new UrlBasedCorsConfigurationSource();
-        src.registerCorsConfiguration("/**", cors);
-        return src;
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", cors);
+        return source;
     }
 }
